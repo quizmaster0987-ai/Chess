@@ -1,0 +1,14 @@
+{
+  "name": "Chess 3D",
+  "short_name": "Chess 3D",
+  "description": "Play 3D chess against a friend or the computer.",
+  "start_url": "/Chess/",
+  "scope": "/Chess/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#11151b",
+  "theme_color": "#11151b",
+  "icons": [
+    { "src": "/Chess/chess-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
