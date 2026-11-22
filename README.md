@@ -21,13 +21,20 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite.
-
 ## Production build
 
 ```bash
 npm run build
 npm run preview
 ```
+
+## Publish on GitHub Pages
+
+The repository includes a GitHub Actions workflow at `.github/workflows/deploy.yml`.
+In GitHub, open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**.
+Every push to `main` will then build and deploy the site.
+
+After a successful deployment, the site URL is:
+https://quizmaster0987-ai.github.io/Chess/
 
 The computer opponent uses a small material-and-position evaluation with a depth-two minimax search. It is designed as a friendly casual opponent rather than a tournament-strength engine.
