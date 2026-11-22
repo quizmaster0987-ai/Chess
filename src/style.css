@@ -39,3 +39,43 @@ button:not(:disabled):active{transform:translateY(1px) scale(.98)}
  .app-shell:fullscreen .game-status,.app-shell:fullscreen .move-card,.app-shell:fullscreen .panel-foot{grid-column:1/-1}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* Board-only immersive fullscreen: keep the board and essential game controls */
+.app-shell:fullscreen{height:100dvh;max-height:100dvh;overflow:hidden;padding:0 clamp(12px,2vw,30px);display:flex;flex-direction:column}
+.app-shell:fullscreen .topbar{height:48px;min-height:48px;border:0}
+.app-shell:fullscreen .brand,.app-shell:fullscreen .live-pill{display:none}
+.app-shell:fullscreen .top-actions{margin-left:auto}
+.app-shell:fullscreen .hero{display:none}
+.app-shell:fullscreen footer{display:none}
+.app-shell:fullscreen .game-layout{flex:1;min-height:0;grid-template-columns:minmax(0,1fr) 270px;gap:18px;align-items:center;padding-bottom:10px}
+.app-shell:fullscreen .board-column{min-height:0;display:flex;flex-direction:column;justify-content:center}
+.app-shell:fullscreen .scene-wrap{height:min( calc(100dvh - 150px), 860px);min-height:0;max-height:none;aspect-ratio:1.12}
+.app-shell:fullscreen .side-panel{align-self:center;width:100%;max-height:calc(100dvh - 80px);overflow:auto}
+.app-shell:fullscreen .move-card,.app-shell:fullscreen .panel-foot{display:none}
+.app-shell:fullscreen .game-status,.app-shell:fullscreen .panel-card{padding:14px}
+.app-shell:fullscreen .status-title{font-size:22px;margin:10px 0 3px}
+@media(max-width:760px){
+ .app-shell:fullscreen{padding:env(safe-area-inset-top) 8px env(safe-area-inset-bottom)}
+ .app-shell:fullscreen .topbar{height:38px;min-height:38px}
+ .app-shell:fullscreen .game-layout{display:flex;flex-direction:column;justify-content:center;gap:4px;padding-bottom:4px}
+ .app-shell:fullscreen .board-column{width:100%;flex:0 1 auto}
+ .app-shell:fullscreen .player-strip{height:34px;padding:0 5px}
+ .app-shell:fullscreen .avatar{width:26px;height:26px;font-size:17px}
+ .app-shell:fullscreen .player-meta strong{font-size:10px}
+ .app-shell:fullscreen .player-meta span{font-size:7px}
+ .app-shell:fullscreen .scene-wrap{width:100%;height:min( calc(100dvh - 185px), 74vw);min-height:0;max-height:none;aspect-ratio:1}
+ .app-shell:fullscreen .side-panel{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;max-height:none;overflow:visible}
+ .app-shell:fullscreen .game-status{grid-column:1/-1}
+ .app-shell:fullscreen .side-panel .panel-card{padding:8px 10px}
+ .app-shell:fullscreen .panel-heading{font-size:7px}
+ .app-shell:fullscreen .status-title{font-size:15px;margin:4px 0 0}
+ .app-shell:fullscreen .status-detail{font-size:9px;margin:0}
+ .app-shell:fullscreen .field-label{margin:5px 0}
+ .app-shell:fullscreen .color-choice button{height:30px;font-size:7px}
+ .app-shell:fullscreen .button-row{margin-top:5px;gap:4px}
+ .app-shell:fullscreen .secondary-button{padding:7px 2px;font-size:7px}
+}
+@media(max-width:380px){
+ .app-shell:fullscreen .scene-wrap{height:min(calc(100dvh - 175px),72vw)}
+ .app-shell:fullscreen .player-strip{height:29px}
+}
