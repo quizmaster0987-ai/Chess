@@ -121,6 +121,8 @@ function makePiece(type, color) {
   return group;
 }
 
+function squareNameForPiece(r,f,flipped){const file=flipped?7-f:f,rank=flipped?7-r:r;return FILES[file]+(8-rank);}
+
 function ChessScene({ fen, selected, legalTargets, lastMove, onSquare, flipped }) {
   const mountRef = useRef(null);
   const apiRef = useRef(null);
@@ -200,8 +202,11 @@ function ChessScene({ fen, selected, legalTargets, lastMove, onSquare, flipped }
       const p=board[r][f];if(!p)continue;
       const group=makePiece(p.type,p.color);
       const file=flipped?7-f:f, rank=flipped?7-r:r;
+      const isMoving = lastMove && squareNameForPiece(r,f,flipped) === lastMove.to;
       group.position.set(file,.10,rank);
+      if (isMoving) { const fromFile=FILES.indexOf(lastMove.from[0]), fromRank=8-Number(lastMove.from[1]); group.position.set(flipped?7-fromFile:fromFile,.10,flipped?7-fromRank:fromRank); group.scale.setScalar(.88); }
       pieces.add(group);
+      if (isMoving) { const start=performance.now(), duration=360, from=group.position.clone(), to=new THREE.Vector3(file,.10,rank); const ease=t=>1-Math.pow(1-t,3); const tick=now=>{const t=Math.min(1,(now-start)/duration),e=ease(t);group.position.lerpVectors(from,to,e);const s=.88+.12*Math.sin(t*Math.PI/2);group.scale.setScalar(s);if(t<1)requestAnimationFrame(tick);else group.scale.setScalar(1);};requestAnimationFrame(tick); }
     }
     const addMark=(square,color,opacity,ring=false)=>{
       const f=FILES.indexOf(square[0]),r=8-Number(square[1]);
@@ -228,6 +233,10 @@ function App() {
   const [promotion,setPromotion]=useState(null);
   const [sound,setSound]=useState(true);
   const [notice,setNotice]=useState('');
+  const [isFullscreen,setIsFullscreen]=useState(false);
+  const fullscreenRef=useRef(null);
+  useEffect(()=>{const sync=()=>setIsFullscreen(!!document.fullscreenElement);document.addEventListener('fullscreenchange',sync);return()=>document.removeEventListener('fullscreenchange',sync);},[]);
+  const toggleFullscreen=async()=>{try{if(!document.fullscreenElement){await fullscreenRef.current?.requestFullscreen?.();}else{await document.exitFullscreen?.();}}catch{setNotice('Fullscreen is not supported by this browser.');}};
   const gameRef=useRef(game);
   gameRef.current=game;
   const moves=game.history({verbose:true});
@@ -297,10 +306,10 @@ function App() {
     setGame(new Chess(g.fen()));setHistory(h=>h.slice(0,index+1));setSelected(null);
   };
 
-  return <main className="app-shell">
+  return <main ref={fullscreenRef} className={'app-shell '+(isFullscreen?'fullscreen-mode':'')}>
     <header className="topbar">
       <a className="brand" href="#"><span className="brand-mark">♞</span><span>CHESS<span className="brand-light">/3D</span></span></a>
-      <div className="top-actions"><span className="live-pill"><i></i> READY TO PLAY</span><button className="icon-button" onClick={()=>setSound(s=>!s)} title="Toggle sound">{sound?'♫':'♪'}</button></div>
+      <div className="top-actions"><span className="live-pill"><i></i> READY TO PLAY</span><button className="icon-button" onClick={toggleFullscreen} title="Toggle full screen" aria-label="Toggle full screen">{isFullscreen?'⤢':'⛶'}</button><button className="icon-button" onClick={()=>setSound(s=>!s)} title="Toggle sound">{sound?'♫':'♪'}</button></div>
     </header>
     <section className="hero">
       <div><p className="eyebrow">THE CLASSIC, REIMAGINED</p><h1>Make your <em>move.</em></h1><p className="subhead">A new perspective on the timeless game.</p></div>
