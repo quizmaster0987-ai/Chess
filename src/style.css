@@ -8,3 +8,34 @@
 @media(max-width:980px){.app-shell{padding:0 25px}.game-layout{grid-template-columns:minmax(0,1fr) 270px;gap:17px}.scene-wrap{min-height:360px}.hero{padding-top:30px}}
 @media(max-width:720px){.app-shell{padding:0 13px}.topbar{height:60px}.live-pill{font-size:8px}.hero{align-items:flex-start;gap:17px;flex-direction:column;padding:27px 0 18px}.hero h1{font-size:39px}.mode-switch{width:100%}.mode-switch button{flex:1}.game-layout{grid-template-columns:1fr;gap:14px}.scene-wrap{height: min(105vw,560px);min-height:320px}.side-panel{display:grid;grid-template-columns:1fr 1fr;gap:10px}.panel-card{padding:13px}.game-status{grid-column:1/-1}.move-card{grid-column:1/-1}.move-list{max-height:150px}.panel-foot{grid-column:1/-1}footer{font-size:7px}.bottom-player{margin-bottom:2px}}
 @media(max-width:390px){.side-panel{grid-template-columns:1fr}.game-status,.move-card,.panel-foot{grid-column:auto}.scene-wrap{min-height:290px}.hero h1{font-size:35px}}
+
+/* Premium motion and immersive play mode */
+:root{color-scheme:dark;scrollbar-color:#8e704b #151b23}
+button{transition:transform .18s ease,background .2s ease,border-color .2s ease,box-shadow .2s ease}
+button:not(:disabled):active{transform:translateY(1px) scale(.98)}
+.panel-card{box-shadow:0 12px 35px #0002;transition:border-color .25s ease,transform .25s ease}
+.panel-card:hover{border-color:#c5a47535}
+.scene-wrap{background:radial-gradient(ellipse at 50% 40%,#293642 0,#151b23 72%);box-shadow:0 24px 70px #0007,inset 0 0 45px #d2b17b0a}
+.scene-wrap canvas{outline:none}
+.player-strip{transition:background .25s ease}
+.turn-indicator.turn-on{animation:turnPulse 1.8s ease-in-out infinite}
+.status-dot{animation:turnPulse 2s ease-in-out infinite}
+@keyframes turnPulse{0%,100%{box-shadow:0 0 0 0 #73c69e00}50%{box-shadow:0 0 0 6px #73c69e18}}
+.move-entry{transition:background .2s ease,transform .2s ease}
+.move-entry:hover{background:#c3a1722c;transform:translateX(2px)}
+.mode-switch button:hover,.secondary-button:hover,.icon-button:hover,.flip-button:hover{border-color:#c5a47588;color:#f0d6ad}
+.app-shell:fullscreen{width:100%;max-width:none;height:100%;overflow:auto;padding:0 clamp(14px,3vw,54px);background:radial-gradient(ellipse at 48% 32%,#26313c 0,#151b23 52%,#0e1218 100%)}
+.app-shell:fullscreen .scene-wrap{height:min(70vh,850px);max-height:none;min-height:360px}
+.app-shell:fullscreen .game-layout{grid-template-columns:minmax(0,1fr) 300px;align-items:stretch}
+.app-shell:fullscreen .board-column{display:flex;flex-direction:column;justify-content:center}
+.app-shell:fullscreen .side-panel{align-self:center;width:100%}
+@media(max-width:720px){
+ .app-shell:fullscreen{padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom)}
+ .app-shell:fullscreen .game-layout{grid-template-columns:1fr;gap:8px}
+ .app-shell:fullscreen .scene-wrap{height:min(68vh,650px);min-height:250px}
+ .app-shell:fullscreen .hero{padding:12px 0}
+ .app-shell:fullscreen .hero h1{font-size:30px}
+ .app-shell:fullscreen .side-panel{grid-template-columns:1fr 1fr}
+ .app-shell:fullscreen .game-status,.app-shell:fullscreen .move-card,.app-shell:fullscreen .panel-foot{grid-column:1/-1}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
