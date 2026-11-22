@@ -155,17 +155,20 @@ function ChessScene({ fen, selected, legalTargets, lastMove, onSquare, flipped }
 
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(200,200), new THREE.MeshStandardMaterial({color:'#10151c',roughness:0.9}));
     floor.rotation.x=-Math.PI/2; floor.position.y=-0.35; floor.receiveShadow=true; scene.add(floor);
-    const boardBase = new THREE.Mesh(new THREE.BoxGeometry(8.35,0.34,8.35), new THREE.MeshStandardMaterial({color:'#30251e',roughness:.38,metalness:.15}));
-    boardBase.position.set(3.5,-0.12,3.5); boardBase.castShadow=true; boardBase.receiveShadow=true; scene.add(boardBase);
-    const frame = new THREE.Mesh(new THREE.BoxGeometry(8.5,.10,8.5), new THREE.MeshStandardMaterial({color:'#b18a55',metalness:.55,roughness:.3}));
-    frame.position.set(3.5,-.29,3.5); scene.add(frame);
+    const boardBase = new THREE.Mesh(new THREE.BoxGeometry(8.72,0.34,8.72), new THREE.MeshStandardMaterial({color:'#111b22',roughness:.28,metalness:.48}));
+    boardBase.position.set(3.5,-0.13,3.5); boardBase.castShadow=true; boardBase.receiveShadow=true; scene.add(boardBase);
+    const brassFrame = new THREE.Mesh(new THREE.BoxGeometry(8.88,.12,8.88), new THREE.MeshStandardMaterial({color:'#c49a5a',metalness:.78,roughness:.22}));
+    brassFrame.position.set(3.5,-.34,3.5); brassFrame.castShadow=true; scene.add(brassFrame);
+    const lowerFrame = new THREE.Mesh(new THREE.BoxGeometry(8.98,.10,8.98), new THREE.MeshStandardMaterial({color:'#26333b',metalness:.55,roughness:.3}));
+    lowerFrame.position.set(3.5,-.43,3.5); scene.add(lowerFrame);
     const squares = new THREE.Group(); scene.add(squares);
     const pieces = new THREE.Group(); scene.add(pieces);
     const marks = new THREE.Group(); scene.add(marks);
     const squareMeshes = [];
     for (let r=0;r<8;r++) for(let f=0;f<8;f++) {
-      const sq = new THREE.Mesh(new THREE.BoxGeometry(.995,.035,.995), new THREE.MeshStandardMaterial({color:(r+f)%2===0?'#e7d4b6':'#76533b',roughness:.48}));
-      sq.position.set(f,.07,r); sq.receiveShadow=true; sq.userData.square=FILES[f]+(8-r); squares.add(sq); squareMeshes.push(sq);
+      const lightSquare=(r+f)%2===0;
+      const sq = new THREE.Mesh(new THREE.BoxGeometry(.985,.075,.985), new THREE.MeshStandardMaterial({color:lightSquare?'#e8dfc9':'#244b49',roughness:lightSquare?.34:.3,metalness:lightSquare?.08:.18}));
+      sq.position.set(f,.075,r); sq.castShadow=true; sq.receiveShadow=true; sq.userData.square=FILES[f]+(8-r); squares.add(sq); squareMeshes.push(sq);
     }
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(3.5,0,3.5); controls.enableDamping=true; controls.dampingFactor=.07;
@@ -309,7 +312,7 @@ function App() {
   return <main ref={fullscreenRef} className={'app-shell '+(isFullscreen?'fullscreen-mode':'')}>
     <header className="topbar">
       <a className="brand" href="#"><span className="brand-mark">♞</span><span>CHESS<span className="brand-light">/3D</span></span></a>
-      <div className="top-actions"><span className="live-pill"><i></i> READY TO PLAY</span><button className="icon-button" onClick={toggleFullscreen} title="Toggle full screen" aria-label="Toggle full screen">{isFullscreen?'⤢':'⛶'}</button><button className="icon-button" onClick={()=>setSound(s=>!s)} title="Toggle sound">{sound?'♫':'♪'}</button></div>
+      <div className="top-actions"><span className="live-pill"><i></i> READY TO PLAY</span><button className="icon-button" onClick={toggleFullscreen} title={isFullscreen?'Exit fullscreen':'Board-only fullscreen'} aria-label={isFullscreen?'Exit fullscreen':'Board-only fullscreen'}>{isFullscreen?'⤢':'⛶'}</button><button className="icon-button" onClick={()=>setSound(s=>!s)} title="Toggle sound">{sound?'♫':'♪'}</button></div>
     </header>
     <section className="hero">
       <div><p className="eyebrow">THE CLASSIC, REIMAGINED</p><h1>Make your <em>move.</em></h1><p className="subhead">A new perspective on the timeless game.</p></div>
