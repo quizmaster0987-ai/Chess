@@ -61,63 +61,59 @@ function chooseComputerMove(chess, depth = 2) {
 function makePiece(type, color) {
   const group = new THREE.Group();
   const light = color === 'w';
-  const mat = new THREE.MeshStandardMaterial({
-    color: light ? 0xf2e8d5 : 0x202733,
-    roughness: light ? 0.34 : 0.29,
-    metalness: light ? 0.12 : 0.42
-  });
-  const trim = new THREE.MeshStandardMaterial({
-    color: light ? 0xc5a875 : 0x77869a,
-    metalness: 0.62, roughness: 0.28
-  });
-  const dark = new THREE.MeshStandardMaterial({ color: light ? 0xd8c9ae : 0x111820, roughness: 0.48 });
-  const add = (geometry, material, y, x = 0, z = 0) => {
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z); mesh.castShadow = true; mesh.receiveShadow = true; group.add(mesh); return mesh;
-  };
-  const cylinder = (rt, rb, h, y, material = mat, radial = 32) => add(new THREE.CylinderGeometry(rt, rb, h, radial), material, y);
-  const sphere = (radius, y, x = 0, z = 0, material = mat) => add(new THREE.SphereGeometry(radius, 24, 16), material, y, x, z);
-  cylinder(0.29, 0.34, 0.12, 0.08, trim);
-  cylinder(0.24, 0.29, 0.12, 0.19);
-  cylinder(0.20, 0.23, 0.12, 0.31, trim);
-  if (type === 'p') {
-    cylinder(0.105, 0.17, 0.27, 0.49);
-    sphere(0.16, 0.72);
-  } else if (type === 'r') {
-    cylinder(0.19, 0.23, 0.30, 0.52);
-    cylinder(0.24, 0.24, 0.11, 0.73, trim);
-    const top = add(new THREE.BoxGeometry(0.48, 0.13, 0.48), mat, 0.84);
-    for (const [x,z] of [[-.16,-.16],[.16,-.16],[-.16,.16],[.16,.16]]) add(new THREE.BoxGeometry(.13,.16,.13), trim, .97, x,z);
-  } else if (type === 'n') {
-    cylinder(0.15, 0.22, 0.34, 0.51);
-    const neck = add(new THREE.CapsuleGeometry(0.14, 0.35, 5, 12), mat, 0.79, 0, -0.015);
-    neck.rotation.z = -0.34;
-    const head = add(new THREE.ConeGeometry(0.19, 0.43, 4), mat, 1.02, 0.04, -0.04);
-    head.rotation.z = -0.58; head.rotation.x = -0.22;
-    sphere(0.035, 1.12, 0.10, -0.15, trim);
-  } else if (type === 'b') {
-    cylinder(0.15, 0.22, 0.28, 0.51);
-    add(new THREE.ConeGeometry(0.20, 0.52, 32), mat, 0.89);
-    sphere(0.075, 1.17, 0, 0, trim);
-    const slit = add(new THREE.BoxGeometry(0.035, 0.30, 0.025), dark, 0.91, 0, 0.17);
-    slit.rotation.z = -0.3;
-  } else if (type === 'q') {
-    cylinder(0.17, 0.22, 0.28, 0.51);
-    add(new THREE.ConeGeometry(0.21, 0.40, 32), mat, 0.83);
-    cylinder(0.22, 0.15, 0.08, 1.06, trim);
-    sphere(0.13, 1.20, 0, 0, trim);
-    for (let i=0;i<8;i++) {
-      const a = i*Math.PI/4;
-      sphere(0.055, 1.13, Math.cos(a)*0.19, Math.sin(a)*0.19, trim);
-    }
-  } else if (type === 'k') {
-    cylinder(0.18, 0.23, 0.31, 0.52);
-    add(new THREE.ConeGeometry(0.21, 0.38, 32), mat, 0.86);
-    cylinder(0.24, 0.24, 0.08, 1.08, trim);
-    add(new THREE.BoxGeometry(0.09, 0.40, 0.09), trim, 1.34);
-    add(new THREE.BoxGeometry(0.28, 0.09, 0.09), trim, 1.39);
+  const cloth = new THREE.MeshStandardMaterial({color:light?0xe9dfca:0x17232d,roughness:.46,metalness:.12});
+  const armor = new THREE.MeshStandardMaterial({color:light?0xf5ead5:0x303d49,roughness:.26,metalness:.62});
+  const gold = new THREE.MeshStandardMaterial({color:light?0xc99f58:0x83a7a2,roughness:.24,metalness:.78});
+  const skin = new THREE.MeshStandardMaterial({color:0xc98f70,roughness:.72});
+  const hair = new THREE.MeshStandardMaterial({color:light?0x5b3828:0x101820,roughness:.72});
+  const dark = new THREE.MeshStandardMaterial({color:0x17191b,roughness:.3});
+  const add=(geo,mat,x,y,z,sx=1,sy=1,sz=1)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.scale.set(sx,sy,sz);m.castShadow=true;m.receiveShadow=true;group.add(m);return m;};
+  const ball=(mat,x,y,z,sx,sy,sz)=>add(new THREE.SphereGeometry(1,24,18),mat,x,y,z,sx,sy,sz);
+  const cyl=(rt,rb,h,mat,x,y,z)=>add(new THREE.CylinderGeometry(rt,rb,h,32),mat,x,y,z);
+  const capsule=(mat,x,y,z,r,len,rot=0)=>{const m=add(new THREE.CapsuleGeometry(r,len,5,12),mat,x,y,z);m.rotation.z=rot;};
+  // Ornate pedestal, full robe, shoulders, arms and hands.
+  cyl(.29,.34,.12,gold,0,.08,0);cyl(.25,.29,.12,armor,0,.19,0);cyl(.20,.24,.10,gold,0,.30,0);
+  ball(cloth,0,.59,0,.19,.25,.15);ball(armor,0,.82,0,.22,.13,.17);
+  capsule(cloth,-.22,.66,0,.065,.24,-.22);capsule(cloth,.22,.66,0,.065,.24,.22);
+  ball(skin,-.25,.52,.035,.065,.07,.065);ball(skin,.25,.52,.035,.065,.07,.065);
+  cyl(.065,.075,.12,skin,0,.91,0);
+  // Expressive face, eyes, nose, hair and ears.
+  ball(skin,0,1.08,.015,.145,.18,.13);
+  ball(hair,0,1.205,-.012,.15,.085,.135);
+  ball(hair,-.135,1.105,-.005,.045,.13,.10);ball(hair,.135,1.105,-.005,.045,.13,.10);
+  ball(dark,-.052,1.105,.137,.018,.023,.012);ball(dark,.052,1.105,.137,.018,.023,.012);
+  ball(skin,0,1.055,.145,.022,.035,.022);ball(dark,0,1.015,.137,.045,.012,.012);
+  if(type==='q'){
+    // Queen: long flowing hair, jeweled crown and royal mantle.
+    ball(hair,0,1.12,-.105,.17,.18,.09);ball(hair,-.16,1.00,-.045,.045,.20,.06);ball(hair,.16,1.00,-.045,.045,.20,.06);
+    cyl(.17,.14,.07,gold,0,1.285,0);
+    for(let i=0;i<7;i++){const a=i*Math.PI*2/7;ball(gold,Math.cos(a)*.15,1.34,Math.sin(a)*.12,.035,.09,.035);}
+    ball(gold,0,1.40,0,.045,.06,.045);
+    ball(armor,0,.67,.13,.12,.18,.045);ball(gold,0,.70,.18,.035,.07,.02);ball(gold,0,.48,.16,.07,.07,.025);
+  } else if(type==='k'){
+    // King: crown with cross, broad mantle and chest emblem.
+    cyl(.16,.13,.08,gold,0,1.29,0);add(new THREE.BoxGeometry(.07,.25,.07),gold,0,1.46,0);add(new THREE.BoxGeometry(.22,.065,.07),gold,0,1.48,0);
+    ball(armor,0,.67,.13,.13,.18,.045);ball(gold,0,.69,.18,.035,.08,.02);ball(gold,0,.48,.16,.07,.07,.025);
+    ball(armor,-.22,.82,0,.09,.10,.09);ball(armor,.22,.82,0,.09,.10,.09);
+  } else if(type==='b'){
+    // Bishop: hood, tall mitre and diagonal sash.
+    ball(cloth,0,1.13,-.055,.18,.22,.16);add(new THREE.ConeGeometry(.16,.36,5),armor,0,1.43,0);ball(gold,0,1.62,0,.045,.045,.045);
+    const sash=add(new THREE.BoxGeometry(.07,.48,.035),gold,.02,.66,.17);sash.rotation.z=-.42;
+  } else if(type==='r'){
+    // Rook: armored castle guard with a crenellated helmet.
+    ball(armor,0,1.22,-.015,.17,.12,.15);cyl(.16,.14,.10,gold,0,1.31,0);
+    for(let i=0;i<4;i++)add(new THREE.BoxGeometry(.07,.13,.07),armor,-.12+i*.08,1.40,0);
+    ball(armor,-.22,.82,0,.12,.12,.12);ball(armor,.22,.82,0,.12,.12,.12);
+  } else if(type==='n'){
+    // Knight: human champion with a horse-inspired helmet crest.
+    ball(armor,0,1.20,-.01,.17,.16,.15);const crest=add(new THREE.ConeGeometry(.07,.30,8),gold,0,1.42,-.02);crest.rotation.z=-.3;
+    ball(armor,-.22,.82,0,.11,.12,.11);ball(armor,.22,.82,0,.11,.12,.11);
+  } else {
+    // Pawn: simple foot soldier with a rounded cap and chest plate.
+    cyl(.14,.10,.10,armor,0,1.27,0);ball(gold,0,1.36,0,.045,.055,.045);ball(armor,0,.66,.13,.10,.14,.035);
   }
-  group.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  group.rotation.y=color==='b'?Math.PI:0;
+  group.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
   return group;
 }
 
