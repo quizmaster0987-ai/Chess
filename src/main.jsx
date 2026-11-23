@@ -58,7 +58,7 @@ function chooseComputerMove(chess, depth = 2) {
   return bestMove;
 }
 
-function makePiece(type, color) {
+function makePiece(type, color, flipped = false) {
   const group = new THREE.Group();
   const light = color === 'w';
   const cloth = new THREE.MeshStandardMaterial({color:light?0xe9dfca:0x17232d,roughness:.46,metalness:.12});
@@ -125,7 +125,8 @@ function makePiece(type, color) {
     ball(gold,0,.88,.17,.055,.055,.025);
     ball(new THREE.MeshStandardMaterial({color:light?0x4f9c91:0x8fbdc2,metalness:.45,roughness:.18}),0,.88,.194,.027,.027,.012);
   }
-  group.rotation.y=color==='w'?Math.PI:0;
+  const nearSideColor = flipped ? 'b' : 'w';
+  group.rotation.y = color === nearSideColor ? 0 : Math.PI;
   group.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
   return group;
 }
@@ -144,8 +145,8 @@ function ChessScene({ fen, selected, legalTargets, lastMove, onSquare, flipped }
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#151b23');
     scene.fog = new THREE.Fog('#151b23', 17, 32);
-    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-    camera.position.set(4.3, 10.5, 12.4);
+    const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+    camera.position.set(3.5, 9.5, 11.5);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.shadowMap.enabled = true;
@@ -181,7 +182,7 @@ function ChessScene({ fen, selected, legalTargets, lastMove, onSquare, flipped }
     }
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(3.5,0,3.5); controls.enableDamping=true; controls.dampingFactor=.07;
-    controls.minDistance=8; controls.maxDistance=19; controls.maxPolarAngle=Math.PI/2.05;
+    controls.minDistance=7; controls.maxDistance=16; controls.maxPolarAngle=Math.PI/2.05;
     controls.enablePan=false;
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
@@ -212,7 +213,7 @@ function ChessScene({ fen, selected, legalTargets, lastMove, onSquare, flipped }
     const board=game.board();
     for(let r=0;r<8;r++)for(let f=0;f<8;f++){
       const p=board[r][f];if(!p)continue;
-      const group=makePiece(p.type,p.color);
+      const group=makePiece(p.type,p.color,flipped);
       const file=flipped?7-f:f, rank=flipped?7-r:r;
       const isMoving = lastMove && squareNameForPiece(r,f,flipped) === lastMove.to;
       group.position.set(file,.10,rank);
