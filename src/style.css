@@ -79,3 +79,31 @@ button:not(:disabled):active{transform:translateY(1px) scale(.98)}
  .app-shell:fullscreen .scene-wrap{height:min(calc(100dvh - 175px),72vw)}
  .app-shell:fullscreen .player-strip{height:29px}
 }
+
+
+/* Larger premium board framing */
+.scene-wrap{
+  height:min(70vw,760px);
+  min-height:430px;
+  max-height:760px;
+  border:1px solid #c5a47555;
+  border-radius:16px;
+  box-shadow:0 28px 85px #0009,0 0 0 4px #c5a4750d,inset 0 0 55px #d2b17b12;
+}
+@media(max-width:720px){
+  .scene-wrap{
+    height:min(112vw,620px);
+    min-height:350px;
+    border-radius:13px;
+  }
+}
+.app-shell:fullscreen .scene-wrap{
+  height:min(calc(100dvh - 115px),94vh);
+  max-height:none;
+}
+@media(max-width:760px){
+  .app-shell:fullscreen .scene-wrap{
+    height:min(calc(100dvh - 165px),94vw);
+    min-height:0;
+  }
+}
