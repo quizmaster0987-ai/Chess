@@ -112,7 +112,20 @@ function makePiece(type, color) {
     // Pawn: simple foot soldier with a rounded cap and chest plate.
     cyl(.14,.10,.10,armor,0,1.27,0);ball(gold,0,1.36,0,.045,.055,.045);ball(armor,0,.66,.13,.10,.14,.035);
   }
-  group.rotation.y=color==='b'?Math.PI:0;
+  // Face each army toward the centre of the board: white looks toward -Z, black toward +Z.
+  // Fine premium detailing: shoulder ornaments, waist sash and a polished chest jewel.
+  ball(gold,-.205,.82,.105,.045,.045,.035);
+  ball(gold,.205,.82,.105,.045,.045,.035);
+  const waist=add(new THREE.TorusGeometry(.155,.018,8,28),gold,0,.49,0);waist.rotation.x=Math.PI/2;
+  ball(gold,0,.79,.176,.035,.045,.025);
+  // Subtle engraved trim on the front of each robe.
+  const trim=add(new THREE.BoxGeometry(.012,.30,.012),gold,0,.60,.154);
+  trim.rotation.z=.025;
+  if(type==='q'||type==='k'){
+    ball(gold,0,.88,.17,.055,.055,.025);
+    ball(new THREE.MeshStandardMaterial({color:light?0x4f9c91:0x8fbdc2,metalness:.45,roughness:.18}),0,.88,.194,.027,.027,.012);
+  }
+  group.rotation.y=color==='w'?Math.PI:0;
   group.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
   return group;
 }
