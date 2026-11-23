@@ -107,3 +107,37 @@ button:not(:disabled):active{transform:translateY(1px) scale(.98)}
     min-height:0;
   }
 }
+
+
+/* True square, larger board viewport */
+.scene-wrap{
+  width:min(100%, min(70vw, 760px));
+  height:auto !important;
+  aspect-ratio:1 / 1;
+  min-height:0 !important;
+  max-height:none !important;
+  margin-inline:auto;
+}
+.scene-wrap canvas{width:100% !important;height:100% !important}
+@media(max-width:720px){
+  .scene-wrap{
+    width:100%;
+    max-width:620px;
+    height:auto !important;
+    aspect-ratio:1 / 1;
+    min-height:0 !important;
+  }
+}
+.app-shell:fullscreen .scene-wrap{
+  width:min(100%, min(82vh, 860px));
+  height:auto !important;
+  aspect-ratio:1 / 1;
+  margin-inline:auto;
+}
+@media(max-width:760px){
+  .app-shell:fullscreen .scene-wrap{
+    width:min(100%, 94vw);
+    height:auto !important;
+    aspect-ratio:1 / 1;
+  }
+}
