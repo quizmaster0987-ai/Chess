@@ -126,7 +126,7 @@ function makePiece(type, color, flipped = false) {
     ball(new THREE.MeshStandardMaterial({color:light?0x4f9c91:0x8fbdc2,metalness:.45,roughness:.18}),0,.88,.194,.027,.027,.012);
   }
   const nearSideColor = flipped ? 'b' : 'w';
-  group.rotation.y = color === nearSideColor ? 0 : Math.PI;
+  group.rotation.y = color === nearSideColor ? Math.PI : 0;
   group.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
   return group;
 }
@@ -145,8 +145,8 @@ function ChessScene({ fen, selected, legalTargets, lastMove, onSquare, flipped }
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#151b23');
     scene.fog = new THREE.Fog('#151b23', 17, 32);
-    const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-    camera.position.set(3.5, 9.5, 11.5);
+    const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+    camera.position.set(3.5, 8.2, 9.8);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.shadowMap.enabled = true;
